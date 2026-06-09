@@ -1,5 +1,31 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
+const VOCAB = [
+  ["Reconstruction", "Rebuilt after being destroyed"],
+  ["Migration", "Move from one place to another"],
+  ["Emancipation", "Being set free from enslavement"],
+  ["Redistricting", "Drawing electoral district boundaries"],
+  ["Jim Crow", "Legal practice of segregating Black people in the US"],
+  ["Ordinances", "Laws set forth by governmental authority"],
+  ["Anti-abolitionist", "Person against the end of slavery"],
+  ["Segregation", "Enforced separation by race"],
+  ["Regressive", "Moves backward"],
+  ["Discrimination", "Unjust or prejudicial treatment"],
+  ["Agricultural", "Cultivating a piece of land, or planting"],
+  ["Sharecropper", "Tenant farmer who gives a part of each crop as rent"],
+  ["Insurrection", "Violent uprising against an authority or government"],
+  ["Harlem Renaissance", "A movement in Black American culture"],
+  ["Improvisation", "Act of coming up with something on the spot"],
+  ["Propagation", "Widely spreading and promoting ideas"],
+  ["Poll tax", "A fee charged to vote, used to suppress Black voting"],
+  ["Civil disobedience", "Breaking an unjust law on purpose, nonviolently, to expose injustice"],
+  ["Desegregation", "Ending legally enforced separation"],
+  ["Freedom Schools", "Temporary schools created to teach Black history, citizenship, and organizing"],
+  ["Separate but equal", "The Plessy-era doctrine used to justify segregation"],
+  ["Sit-in", "Staying seated in a segregated place and refusing to leave"],
+  ["Voter intimidation", "Threats or violence meant to stop people from voting"],
+];
+
 const SECTIONS = {
   migration: {
     title: "Great Migration",
@@ -226,38 +252,18 @@ const SECTIONS = {
       ["Why is the Montgomery Bus Boycott considered effective?", "It combined sustained economic pressure with mass community participation and produced a legal win."],
       ["What did the Nation of Islam emphasize compared to the SCLC?", "NOI stressed Black economic independence and separatism; SCLC stressed integration through nonviolence."],
     ]
+  },
+  vocabulary: {
+    title: "Vocabulary",
+    emoji: "📖",
+    color: "#0D9488",
+    questions: VOCAB,
   }
 };
 
 const allQuestions = Object.entries(SECTIONS).flatMap(([key, sec]) =>
   sec.questions.map((q, i) => ({ section: key, sectionTitle: sec.title, emoji: sec.emoji, color: sec.color, question: q[0], answer: q[1], id: `${key}-${i}` }))
 );
-
-const VOCAB = [
-  ["Reconstruction", "Rebuilt after being destroyed"],
-  ["Migration", "Move from one place to another"],
-  ["Emancipation", "Being set free from enslavement"],
-  ["Redistricting", "Drawing electoral district boundaries"],
-  ["Jim Crow", "Legal practice of segregating Black people in the US"],
-  ["Ordinances", "Laws set forth by governmental authority"],
-  ["Anti-abolitionist", "Person against the end of slavery"],
-  ["Segregation", "Enforced separation by race"],
-  ["Regressive", "Moves backward"],
-  ["Discrimination", "Unjust or prejudicial treatment"],
-  ["Agricultural", "Cultivating a piece of land, or planting"],
-  ["Sharecropper", "Tenant farmer who gives a part of each crop as rent"],
-  ["Insurrection", "Violent uprising against an authority or government"],
-  ["Harlem Renaissance", "A movement in Black American culture"],
-  ["Improvisation", "Act of coming up with something on the spot"],
-  ["Propagation", "Widely spreading and promoting ideas"],
-  ["Poll tax", "A fee charged to vote, used to suppress Black voting"],
-  ["Civil disobedience", "Breaking an unjust law on purpose, nonviolently, to expose injustice"],
-  ["Desegregation", "Ending legally enforced separation"],
-  ["Freedom Schools", "Temporary schools created to teach Black history, citizenship, and organizing"],
-  ["Separate but equal", "The Plessy-era doctrine used to justify segregation"],
-  ["Sit-in", "Staying seated in a segregated place and refusing to leave"],
-  ["Voter intimidation", "Threats or violence meant to stop people from voting"],
-];
 
 function shuffle(arr) {
   const a = [...arr];
@@ -274,12 +280,37 @@ export default function AAHCFlashcards() {
   const [deck, setDeck] = useState([]);
   const [cardIndex, setCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [known, setKnown] = useState({});
+  const [known, setKnown] = useState(() => {
+    try {
+      const saved = localStorage.getItem("aahc-known");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
   const [quizQueue, setQuizQueue] = useState([]);
   const [streak, setStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-  const [showVocab, setShowVocab] = useState(false);
-  const [vocabFlipped, setVocabFlipped] = useState({});
+  const [bestStreak, setBestStreak] = useState(() => {
+    try {
+      const saved = localStorage.getItem("aahc-best-streak");
+      return saved ? JSON.parse(saved) : 0;
+    } catch {
+      return 0;
+    }
+  });
+
+  // Persist progress so it survives page refreshes
+  useEffect(() => {
+    try {
+      localStorage.setItem("aahc-known", JSON.stringify(known));
+    } catch {}
+  }, [known]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("aahc-best-streak", JSON.stringify(bestStreak));
+    } catch {}
+  }, [bestStreak]);
 
   const totalKnown = Object.values(known).filter(Boolean).length;
   const totalQuestions = allQuestions.length;
@@ -386,6 +417,20 @@ export default function AAHCFlashcards() {
               🔥 Best streak: {bestStreak}
             </div>
           )}
+          {(totalKnown > 0 || bestStreak > 0) && (
+            <button onClick={() => {
+              if (confirm("Reset all progress? This clears your mastery and best streak.")) {
+                setKnown({});
+                setBestStreak(0);
+              }
+            }} style={{
+              marginTop: 10, background: "none", border: "none",
+              color: "#64748B", fontSize: 11, cursor: "pointer",
+              textDecoration: "underline", padding: 0
+            }}>
+              Reset progress
+            </button>
+          )}
         </div>
 
         {/* Quick actions */}
@@ -445,31 +490,6 @@ export default function AAHCFlashcards() {
             );
           })}
         </div>
-
-        {/* Vocab section */}
-        <button onClick={() => setShowVocab(!showVocab)} style={{
-          width: "100%", padding: "12px", borderRadius: 10, marginTop: 12,
-          background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)",
-          color: "#94A3B8", fontWeight: 600, fontSize: 13, cursor: "pointer"
-        }}>
-          📖 VOCABULARY ({VOCAB.length} terms) {showVocab ? "▲" : "▼"}
-        </button>
-        {showVocab && (
-          <div style={{ marginTop: 8, display: "flex", flexDirection: "column", gap: 4 }}>
-            {VOCAB.map((v, i) => (
-              <div key={i} onClick={() => setVocabFlipped(prev => ({ ...prev, [i]: !prev[i] }))}
-                style={{
-                  padding: "10px 14px", borderRadius: 8,
-                  background: vocabFlipped[i] ? "rgba(245,158,11,0.1)" : "rgba(255,255,255,0.03)",
-                  border: `1px solid ${vocabFlipped[i] ? "rgba(245,158,11,0.2)" : "rgba(255,255,255,0.05)"}`,
-                  cursor: "pointer", fontSize: 13
-                }}>
-                <span style={{ fontWeight: 600, color: "#F59E0B" }}>{v[0]}</span>
-                {vocabFlipped[i] && <span style={{ color: "#CBD5E1" }}> — {v[1]}</span>}
-              </div>
-            ))}
-          </div>
-        )}
 
         <div style={{ textAlign: "center", padding: "20px 0 10px", color: "#475569", fontSize: 11 }}>
           New York is waiting. Let's get it. 🗽
