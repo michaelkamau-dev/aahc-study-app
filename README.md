@@ -10,8 +10,8 @@ This isn't a demo project. It's the actual tool I studied from. The regional ver
 
 ## What's in the deck
 
-- **172 question cards** across **11 themed sections**
-- **23 vocabulary terms** in a separate tap-to-reveal bank
+- **217 cards** across **13 themed sections** (including a vocabulary section)
+- A **vocabulary section** of 23 key terms, quizzed alongside everything else
 
 | Section | Cards |
 | --- | --- |
@@ -25,7 +25,9 @@ This isn't a demo project. It's the actual tool I studied from. The regional ver
 | Black Churches | 5 |
 | Civil Rights Era | 50 |
 | Women of Civil Rights | 16 |
-| Nationals Gap Drill | 56 |
+| Nationals Gap Drill | 33 |
+| Foundations 1800-1940 | 45 |
+| Vocabulary | 23 |
 
 ## Features
 
@@ -36,7 +38,7 @@ This isn't a demo project. It's the actual tool I studied from. The regional ver
 - **Streak tracking** (current and best)
 - **Mastery progress** bar with percent complete
 - Flip-card interface with got-it / missed marking
-- Vocabulary bank with tap-to-reveal definitions
+- Vocabulary quizzed as its own section
 
 ## Tech
 
