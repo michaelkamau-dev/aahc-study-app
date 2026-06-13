@@ -6,7 +6,7 @@ The deck covers African American history from the Great Migration through the Ci
 
 ## The story
 
-This isn't a demo project. It's the actual tool I studied from. The regional version of this deck was a main reason I placed first at Regionals. For Nationals, I added a dedicated gap-drill section covering the additional figures, events, and strategy comparisons in the official study guide, so the app now matches the fuller national syllabus.
+This is the actual tool I studied from. The regional version of this deck was a main reason I placed first at Regionals. For Nationals, I added a dedicated gap-drill section covering the additional figures, events, and strategy comparisons in the official study guide, so the app now matches the fuller national syllabus.
 
 ## What's in the deck
 
