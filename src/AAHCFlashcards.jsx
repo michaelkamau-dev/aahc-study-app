@@ -305,6 +305,44 @@ const SECTIONS = {
       ["What was the grandfather clause?", "A voting loophole favoring white voters whose ancestors had voted before Black men gained voting rights."],
     ]
   },
+  connections: {
+    title: "Connections (Cause & Effect)",
+    emoji: "🔗",
+    color: "#7C3AED",
+    questions: [
+      ["Trace the chain: Rosa Parks' arrest leads to what, and what was the result?", "Parks' arrest -> Montgomery Bus Boycott -> MLK rises as a leader -> bus segregation ruled unconstitutional."],
+      ["Trace the chain: Thurgood Marshall and the NAACP's legal strategy.", "Marshall + NAACP -> Brown v. Board (1954) -> overturned Plessy's 'separate but equal' -> ordered school desegregation."],
+      ["Trace the chain: Emmett Till's murder and its effect.", "Till's 1955 murder -> open-casket funeral and media coverage -> national outrage -> helped energize the early movement."],
+      ["Trace the chain: Selma marches to federal law.", "Selma marches / Bloody Sunday (1965) -> televised violence shifted opinion -> Voting Rights Act of 1965."],
+      ["Trace the chain: Birmingham Campaign to federal law.", "Birmingham Campaign + Children's Crusade (1963) -> televised police violence -> pressure for the Civil Rights Act of 1964."],
+      ["Trace the chain: Dred Scott to the Reconstruction Amendments.", "Dred Scott (1857) denied Black citizenship -> deepened tensions toward Civil War -> 13th, 14th, 15th Amendments."],
+      ["Trace the chain: the March on Washington's purpose and result.", "March on Washington (1963) -> demanded jobs and civil rights -> built momentum for the Civil Rights Act of 1964."],
+      ["Trace the chain: Plessy v. Ferguson's long-term effect.", "Plessy (1896) legalized 'separate but equal' -> decades of Jim Crow segregation -> finally overturned by Brown (1954)."],
+      ["Trace the chain: Freedom Summer's purpose and result.", "Freedom Summer (1964) -> registered Black voters in Mississippi amid violence -> exposed suppression -> fed into the Voting Rights Act of 1965."],
+      ["Why does 'person to event to law to impact' matter for this competition?", "Nationals tests broad context and connections, not isolated facts, so knowing how a figure links to an event, a law, and its impact is the key skill."],
+      ["Connect the 13th, 14th, and 15th Amendments as a chain.", "13th abolished slavery -> 14th granted citizenship and equal protection -> 15th protected the right to vote regardless of race."],
+      ["Connect the NAACP's founding to its biggest win.", "NAACP founded 1909 -> built a legal strategy over decades -> won Brown v. Board in 1954."],
+    ]
+  },
+  presidents: {
+    title: "Presidents & Their Era",
+    emoji: "🏛️",
+    color: "#1D4ED8",
+    questions: [
+      ["Who was president during the Civil War and the Emancipation Proclamation?", "Abraham Lincoln."],
+      ["Which president signed the Emancipation Proclamation in 1863?", "Abraham Lincoln."],
+      ["Who was president when federal troops enforced integration at Little Rock (1957)?", "Dwight D. Eisenhower."],
+      ["Who was president during the Brown v. Board decision and early school integration?", "Dwight D. Eisenhower."],
+      ["Who was president during the Birmingham Campaign and the March on Washington (1963)?", "John F. Kennedy."],
+      ["Who was president who proposed the bill that became the Civil Rights Act before his assassination?", "John F. Kennedy."],
+      ["Who was president who signed the Civil Rights Act of 1964 and Voting Rights Act of 1965?", "Lyndon B. Johnson."],
+      ["Who was president who signed the Fair Housing Act of 1968?", "Lyndon B. Johnson."],
+      ["Who was president who desegregated the military with Executive Order 9981 (1948)?", "Harry S. Truman."],
+      ["Which president was in office during Selma and Bloody Sunday (1965)?", "Lyndon B. Johnson."],
+      ["Which president oversaw the start of Reconstruction after Lincoln's assassination?", "Andrew Johnson."],
+      ["Which president was associated with segregating federal departments (Treasury, Navy, Post Office)?", "Woodrow Wilson."],
+    ]
+  },
   vocabulary: {
     title: "Vocabulary",
     emoji: "📖",
@@ -316,6 +354,67 @@ const SECTIONS = {
 const allQuestions = Object.entries(SECTIONS).flatMap(([key, sec]) =>
   sec.questions.map((q, i) => ({ section: key, sectionTitle: sec.title, emoji: sec.emoji, color: sec.color, question: q[0], answer: q[1], id: `${key}-${i}` }))
 );
+
+// Team drill buckets — built from existing SECTIONS, with their own separate progress.
+// Era split: Yosiah 1800-1900, Michael 1900-1940, Grace 1940-present.
+const PRESIDENTS_BY_ERA = {
+  yosiah: [
+    ["Who was president during the Civil War and the Emancipation Proclamation?", "Abraham Lincoln."],
+    ["Which president signed the Emancipation Proclamation in 1863?", "Abraham Lincoln."],
+    ["Which president oversaw the start of Reconstruction after Lincoln's assassination?", "Andrew Johnson."],
+  ],
+  michael: [
+    ["Which president was associated with segregating federal departments (Treasury, Navy, Post Office)?", "Woodrow Wilson."],
+  ],
+  grace: [
+    ["Who was president who desegregated the military with Executive Order 9981 (1948)?", "Harry S. Truman."],
+    ["Who was president when federal troops enforced integration at Little Rock (1957)?", "Dwight D. Eisenhower."],
+    ["Who was president during the Brown v. Board decision and early school integration?", "Dwight D. Eisenhower."],
+    ["Who was president during the Birmingham Campaign and the March on Washington (1963)?", "John F. Kennedy."],
+    ["Who was president who proposed the bill that became the Civil Rights Act before his assassination?", "John F. Kennedy."],
+    ["Who was president who signed the Civil Rights Act of 1964 and Voting Rights Act of 1965?", "Lyndon B. Johnson."],
+    ["Who was president who signed the Fair Housing Act of 1968?", "Lyndon B. Johnson."],
+    ["Which president was in office during Selma and Bloody Sunday (1965)?", "Lyndon B. Johnson."],
+  ],
+};
+
+// Which SECTIONS keys belong to each person's era bucket
+const ERA_SECTION_KEYS = {
+  yosiah: ["foundations"],
+  michael: ["migration", "housing", "power", "supremacy", "war", "resistance", "harlem", "churches"],
+  grace: ["civilrights", "women", "gaps"],
+};
+
+const TEAM_BUCKETS = [
+  {
+    key: "yosiah", person: "Yosiah", era: "1800-1900", emoji: "1️⃣", color: "#92400E",
+    cards: [
+      ...ERA_SECTION_KEYS.yosiah.flatMap(k => SECTIONS[k].questions.map((q, i) => ({ question: q[0], answer: q[1], color: SECTIONS[k].color, id: `team-yosiah-${k}-${i}` }))),
+      ...PRESIDENTS_BY_ERA.yosiah.map((q, i) => ({ question: q[0], answer: q[1], color: "#1D4ED8", id: `team-yosiah-pres-${i}` })),
+    ],
+  },
+  {
+    key: "michael", person: "Michael (you)", era: "1900-1940", emoji: "2️⃣", color: "#B45309",
+    cards: [
+      ...ERA_SECTION_KEYS.michael.flatMap(k => SECTIONS[k].questions.map((q, i) => ({ question: q[0], answer: q[1], color: SECTIONS[k].color, id: `team-michael-${k}-${i}` }))),
+      ...PRESIDENTS_BY_ERA.michael.map((q, i) => ({ question: q[0], answer: q[1], color: "#1D4ED8", id: `team-michael-pres-${i}` })),
+    ],
+  },
+  {
+    key: "grace", person: "Grace", era: "1940-present", emoji: "3️⃣", color: "#1E40AF",
+    cards: [
+      ...ERA_SECTION_KEYS.grace.flatMap(k => SECTIONS[k].questions.map((q, i) => ({ question: q[0], answer: q[1], color: SECTIONS[k].color, id: `team-grace-${k}-${i}` }))),
+      ...PRESIDENTS_BY_ERA.grace.map((q, i) => ({ question: q[0], answer: q[1], color: "#1D4ED8", id: `team-grace-pres-${i}` })),
+    ],
+  },
+  {
+    key: "everyone", person: "EVERYONE drills", era: "Connections + all Presidents", emoji: "🔗", color: "#7C3AED",
+    cards: [
+      ...SECTIONS.connections.questions.map((q, i) => ({ question: q[0], answer: q[1], color: SECTIONS.connections.color, id: `team-everyone-conn-${i}` })),
+      ...SECTIONS.presidents.questions.map((q, i) => ({ question: q[0], answer: q[1], color: SECTIONS.presidents.color, id: `team-everyone-pres-${i}` })),
+    ],
+  },
+];
 
 function shuffle(arr) {
   const a = [...arr];
@@ -364,6 +463,22 @@ export default function AAHCFlashcards() {
     } catch {}
   }, [bestStreak]);
 
+  // SEPARATE team-tab progress — own storage key, never touches main "known"
+  const [tab, setTab] = useState("home");
+  const [teamKnown, setTeamKnown] = useState(() => {
+    try {
+      const saved = localStorage.getItem("aahc-team-known");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem("aahc-team-known", JSON.stringify(teamKnown));
+    } catch {}
+  }, [teamKnown]);
+
   const totalKnown = Object.values(known).filter(Boolean).length;
   const totalQuestions = allQuestions.length;
   const pct = Math.round((totalKnown / totalQuestions) * 100);
@@ -390,10 +505,31 @@ export default function AAHCFlashcards() {
     setMode("quiz");
   };
 
+  // Launch a team bucket into the study UI; marks into teamKnown, not known
+  const [teamMode, setTeamMode] = useState(false);
+  const [currentBucket, setCurrentBucket] = useState(null);
+  const startTeamBucket = (bucketKey, onlyMissed = false) => {
+    const bucket = TEAM_BUCKETS.find(b => b.key === bucketKey);
+    if (!bucket) return;
+    const pool = onlyMissed
+      ? bucket.cards.filter(c => teamKnown[c.id] === false)
+      : bucket.cards;
+    setDeck(shuffle(pool));
+    setCardIndex(0);
+    setFlipped(false);
+    setTeamMode(true);
+    setCurrentBucket(bucketKey);
+    setMode("study");
+  };
+
   const markCard = (gotIt) => {
     const card = mode === "quiz" ? quizQueue[cardIndex] : deck[cardIndex];
     if (card) {
-      setKnown(prev => ({ ...prev, [card.id]: gotIt }));
+      if (teamMode) {
+        setTeamKnown(prev => ({ ...prev, [card.id]: gotIt }));
+      } else {
+        setKnown(prev => ({ ...prev, [card.id]: gotIt }));
+      }
       if (gotIt) {
         const newStreak = streak + 1;
         setStreak(newStreak);
@@ -442,6 +578,75 @@ export default function AAHCFlashcards() {
           }}>AAHC STUDY MODE</h1>
           <p style={{ color: "#94A3B8", fontSize: 13, margin: 0 }}>100 Black Men of Metro STL • Nationals June 17</p>
         </div>
+
+        {/* Tab toggle */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
+          <button onClick={() => setTab("home")} style={{
+            flex: 1, padding: "10px", borderRadius: 10, cursor: "pointer",
+            border: tab === "home" ? "1px solid rgba(245,158,11,0.5)" : "1px solid rgba(255,255,255,0.08)",
+            background: tab === "home" ? "rgba(245,158,11,0.12)" : "rgba(255,255,255,0.03)",
+            color: tab === "home" ? "#F59E0B" : "#94A3B8", fontWeight: 700, fontSize: 13
+          }}>📚 All Sections</button>
+          <button onClick={() => setTab("team")} style={{
+            flex: 1, padding: "10px", borderRadius: 10, cursor: "pointer",
+            border: tab === "team" ? "1px solid rgba(124,58,237,0.6)" : "1px solid rgba(255,255,255,0.08)",
+            background: tab === "team" ? "rgba(124,58,237,0.15)" : "rgba(255,255,255,0.03)",
+            color: tab === "team" ? "#A78BFA" : "#94A3B8", fontWeight: 700, fontSize: 13
+          }}>🤝 Drill My Section</button>
+        </div>
+
+        {tab === "team" && (
+          <div>
+            <p style={{ fontSize: 12, color: "#64748B", lineHeight: 1.5, marginBottom: 16 }}>
+              Team split for Nationals. Each person drills their era. Progress here is tracked separately from All Sections.
+            </p>
+            {TEAM_BUCKETS.map(b => {
+              const total = b.cards.length;
+              const knownCt = b.cards.filter(c => teamKnown[c.id]).length;
+              const missedCt = b.cards.filter(c => teamKnown[c.id] === false).length;
+              const bpct = total > 0 ? Math.round((knownCt / total) * 100) : 0;
+              const isEveryone = b.key === "everyone";
+              return (
+                <div key={b.key} style={{
+                  marginBottom: 12, padding: "14px 16px", borderRadius: 12,
+                  background: isEveryone ? "rgba(124,58,237,0.08)" : "rgba(255,255,255,0.04)",
+                  border: `1px solid ${isEveryone ? "rgba(124,58,237,0.3)" : "rgba(255,255,255,0.08)"}`,
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                    <span style={{ fontSize: 20 }}>{b.emoji}</span>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: isEveryone ? "#C4B5FD" : "#E2E8F0" }}>{b.person}</div>
+                      <div style={{ fontSize: 11, color: "#64748B" }}>{b.era} • {total} cards</div>
+                    </div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: bpct === 100 ? "#4ADE80" : "#94A3B8" }}>
+                      {knownCt}/{total}
+                    </div>
+                  </div>
+                  <div style={{ height: 6, background: "rgba(255,255,255,0.1)", borderRadius: 3, overflow: "hidden", marginBottom: 10 }}>
+                    <div style={{ height: "100%", width: `${bpct}%`, background: b.color, borderRadius: 3, transition: "width 0.4s ease" }} />
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={() => startTeamBucket(b.key)} style={{
+                      flex: 1, padding: "10px", borderRadius: 8, border: "none",
+                      background: b.color, color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer"
+                    }}>Study ({total})</button>
+                    {missedCt > 0 && (
+                      <button onClick={() => startTeamBucket(b.key, true)} style={{
+                        padding: "10px 14px", borderRadius: 8, border: "1px solid rgba(239,68,68,0.3)",
+                        background: "rgba(239,68,68,0.1)", color: "#FCA5A5", fontWeight: 600, fontSize: 13, cursor: "pointer"
+                      }}>Missed ({missedCt})</button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+            <div style={{ textAlign: "center", padding: "12px 0", color: "#475569", fontSize: 11 }}>
+              Lock your lane. Trust your team. 🗽
+            </div>
+          </div>
+        )}
+
+        {tab === "home" && (<>
 
         {/* Progress bar */}
         <div style={{
@@ -546,15 +751,18 @@ export default function AAHCFlashcards() {
         <div style={{ textAlign: "center", padding: "20px 0 10px", color: "#475569", fontSize: 11 }}>
           New York is waiting. Let's get it. 🗽
         </div>
+        </>)}
       </div>
     );
   }
 
   if (mode === "results") {
     const reviewDeck = mode === "quiz" ? quizQueue : deck;
-    const sessionKnown = reviewDeck.filter(q => known[q.id]).length;
+    const progressStore = teamMode ? teamKnown : known;
+    const sessionKnown = reviewDeck.filter(q => progressStore[q.id]).length;
     const sessionTotal = reviewDeck.length;
-    const sessionPct = Math.round((sessionKnown / sessionTotal) * 100);
+    const sessionPct = sessionTotal > 0 ? Math.round((sessionKnown / sessionTotal) * 100) : 0;
+    const exitHome = () => { setTeamMode(false); setCurrentBucket(null); setMode("home"); setTab(teamMode ? "team" : "home"); };
     return (
       <div style={{
         minHeight: "100vh",
@@ -569,15 +777,15 @@ export default function AAHCFlashcards() {
         <div style={{ fontSize: 64, marginTop: 60 }}>{sessionPct >= 80 ? "🔥" : sessionPct >= 50 ? "💪" : "📚"}</div>
         <h2 style={{ fontSize: 28, fontWeight: 800, margin: "16px 0 8px" }}>Session Complete!</h2>
         <p style={{ fontSize: 18, color: "#F59E0B", fontWeight: 700 }}>{sessionKnown}/{sessionTotal} correct ({sessionPct}%)</p>
-        {bestStreak > 0 && <p style={{ color: "#94A3B8", fontSize: 14 }}>🔥 Best streak: {bestStreak}</p>}
-        <p style={{ color: "#94A3B8", fontSize: 14, marginTop: 8 }}>Overall mastery: {totalKnown}/{totalQuestions} ({pct}%)</p>
+        {!teamMode && bestStreak > 0 && <p style={{ color: "#94A3B8", fontSize: 14 }}>🔥 Best streak: {bestStreak}</p>}
+        {!teamMode && <p style={{ color: "#94A3B8", fontSize: 14, marginTop: 8 }}>Overall mastery: {totalKnown}/{totalQuestions} ({pct}%)</p>}
         <div style={{ display: "flex", gap: 8, marginTop: 32, justifyContent: "center" }}>
-          <button onClick={() => setMode("home")} style={{
+          <button onClick={exitHome} style={{
             padding: "14px 28px", borderRadius: 10, border: "none",
             background: "rgba(255,255,255,0.1)", color: "#E2E8F0",
             fontWeight: 600, fontSize: 14, cursor: "pointer"
           }}>← Back</button>
-          {missedCount > 0 && (
+          {!teamMode && missedCount > 0 && (
             <button onClick={() => startSection("missed")} style={{
               padding: "14px 28px", borderRadius: 10, border: "none",
               background: "linear-gradient(135deg, #EF4444, #DC2626)",
@@ -604,7 +812,7 @@ export default function AAHCFlashcards() {
     }}>
       {/* Top bar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-        <button onClick={() => setMode("home")} style={{
+        <button onClick={() => { const wasTeam = teamMode; setTeamMode(false); setCurrentBucket(null); setMode("home"); setTab(wasTeam ? "team" : "home"); }} style={{
           background: "none", border: "none", color: "#94A3B8", fontSize: 14, cursor: "pointer", padding: 4
         }}>✕ Exit</button>
         <span style={{ fontSize: 13, color: "#94A3B8", fontWeight: 600 }}>
