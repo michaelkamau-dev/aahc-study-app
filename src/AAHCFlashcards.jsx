@@ -394,7 +394,7 @@ const TEAM_BUCKETS = [
     ],
   },
   {
-    key: "michael", person: "Michael (you)", era: "1900-1940", emoji: "2️⃣", color: "#B45309",
+    key: "michael", person: "Michael", era: "1900-1940", emoji: "2️⃣", color: "#B45309",
     cards: [
       ...ERA_SECTION_KEYS.michael.flatMap(k => SECTIONS[k].questions.map((q, i) => ({ question: q[0], answer: q[1], color: SECTIONS[k].color, id: `team-michael-${k}-${i}` }))),
       ...PRESIDENTS_BY_ERA.michael.map((q, i) => ({ question: q[0], answer: q[1], color: "#1D4ED8", id: `team-michael-pres-${i}` })),
@@ -454,13 +454,13 @@ export default function AAHCFlashcards() {
   useEffect(() => {
     try {
       localStorage.setItem("aahc-known", JSON.stringify(known));
-    } catch {}
+    } catch { }
   }, [known]);
 
   useEffect(() => {
     try {
       localStorage.setItem("aahc-best-streak", JSON.stringify(bestStreak));
-    } catch {}
+    } catch { }
   }, [bestStreak]);
 
   // SEPARATE team-tab progress — own storage key, never touches main "known"
@@ -476,7 +476,7 @@ export default function AAHCFlashcards() {
   useEffect(() => {
     try {
       localStorage.setItem("aahc-team-known", JSON.stringify(teamKnown));
-    } catch {}
+    } catch { }
   }, [teamKnown]);
 
   const totalKnown = Object.values(known).filter(Boolean).length;
@@ -487,8 +487,8 @@ export default function AAHCFlashcards() {
     const questions = key === "all"
       ? shuffle(allQuestions)
       : key === "missed"
-      ? shuffle(allQuestions.filter(q => known[q.id] === false))
-      : shuffle(allQuestions.filter(q => q.section === key));
+        ? shuffle(allQuestions.filter(q => known[q.id] === false))
+        : shuffle(allQuestions.filter(q => q.section === key));
     setDeck(questions);
     setCardIndex(0);
     setFlipped(false);
@@ -648,109 +648,109 @@ export default function AAHCFlashcards() {
 
         {tab === "home" && (<>
 
-        {/* Progress bar */}
-        <div style={{
-          background: "rgba(255,255,255,0.06)",
-          borderRadius: 12,
-          padding: "14px 16px",
-          marginBottom: 16,
-          border: "1px solid rgba(255,255,255,0.08)"
-        }}>
-          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 13 }}>
-            <span style={{ color: "#94A3B8" }}>Mastery Progress</span>
-            <span style={{ color: "#F59E0B", fontWeight: 700 }}>{totalKnown}/{totalQuestions} ({pct}%)</span>
-          </div>
-          <div style={{ height: 8, background: "rgba(255,255,255,0.1)", borderRadius: 4, overflow: "hidden" }}>
-            <div style={{
-              height: "100%",
-              width: `${pct}%`,
-              background: "linear-gradient(90deg, #F59E0B, #EF4444)",
-              borderRadius: 4,
-              transition: "width 0.5s ease"
-            }} />
-          </div>
-          {bestStreak > 0 && (
-            <div style={{ fontSize: 12, color: "#94A3B8", marginTop: 6 }}>
-              🔥 Best streak: {bestStreak}
+          {/* Progress bar */}
+          <div style={{
+            background: "rgba(255,255,255,0.06)",
+            borderRadius: 12,
+            padding: "14px 16px",
+            marginBottom: 16,
+            border: "1px solid rgba(255,255,255,0.08)"
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8, fontSize: 13 }}>
+              <span style={{ color: "#94A3B8" }}>Mastery Progress</span>
+              <span style={{ color: "#F59E0B", fontWeight: 700 }}>{totalKnown}/{totalQuestions} ({pct}%)</span>
             </div>
-          )}
-          {(totalKnown > 0 || bestStreak > 0) && (
-            <button onClick={() => {
-              if (confirm("Reset all progress? This clears your mastery and best streak.")) {
-                setKnown({});
-                setBestStreak(0);
-              }
-            }} style={{
-              marginTop: 10, background: "none", border: "none",
-              color: "#64748B", fontSize: 11, cursor: "pointer",
-              textDecoration: "underline", padding: 0
+            <div style={{ height: 8, background: "rgba(255,255,255,0.1)", borderRadius: 4, overflow: "hidden" }}>
+              <div style={{
+                height: "100%",
+                width: `${pct}%`,
+                background: "linear-gradient(90deg, #F59E0B, #EF4444)",
+                borderRadius: 4,
+                transition: "width 0.5s ease"
+              }} />
+            </div>
+            {bestStreak > 0 && (
+              <div style={{ fontSize: 12, color: "#94A3B8", marginTop: 6 }}>
+                🔥 Best streak: {bestStreak}
+              </div>
+            )}
+            {(totalKnown > 0 || bestStreak > 0) && (
+              <button onClick={() => {
+                if (confirm("Reset all progress? This clears your mastery and best streak.")) {
+                  setKnown({});
+                  setBestStreak(0);
+                }
+              }} style={{
+                marginTop: 10, background: "none", border: "none",
+                color: "#64748B", fontSize: 11, cursor: "pointer",
+                textDecoration: "underline", padding: 0
+              }}>
+                Reset progress
+              </button>
+            )}
+          </div>
+
+          {/* Quick actions */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+            <button onClick={() => startSection("all")} style={{
+              flex: 1, padding: "14px 12px", borderRadius: 10, border: "none",
+              background: "linear-gradient(135deg, #F59E0B, #D97706)",
+              color: "#0C0C1D", fontWeight: 700, fontSize: 14, cursor: "pointer"
             }}>
-              Reset progress
+              🔀 ALL CARDS ({totalQuestions})
+            </button>
+            <button onClick={startQuiz} style={{
+              flex: 1, padding: "14px 12px", borderRadius: 10, border: "none",
+              background: "linear-gradient(135deg, #EF4444, #DC2626)",
+              color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer"
+            }}>
+              ⚡ RAPID QUIZ
+            </button>
+          </div>
+
+          {missedCount > 0 && (
+            <button onClick={() => startSection("missed")} style={{
+              width: "100%", padding: "12px", borderRadius: 10, border: "1px solid rgba(239,68,68,0.3)",
+              background: "rgba(239,68,68,0.1)", color: "#FCA5A5", fontWeight: 600,
+              fontSize: 13, cursor: "pointer", marginBottom: 16
+            }}>
+              🎯 DRILL MISSED ONLY ({missedCount} cards)
             </button>
           )}
-        </div>
 
-        {/* Quick actions */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-          <button onClick={() => startSection("all")} style={{
-            flex: 1, padding: "14px 12px", borderRadius: 10, border: "none",
-            background: "linear-gradient(135deg, #F59E0B, #D97706)",
-            color: "#0C0C1D", fontWeight: 700, fontSize: 14, cursor: "pointer"
-          }}>
-            🔀 ALL CARDS ({totalQuestions})
-          </button>
-          <button onClick={startQuiz} style={{
-            flex: 1, padding: "14px 12px", borderRadius: 10, border: "none",
-            background: "linear-gradient(135deg, #EF4444, #DC2626)",
-            color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer"
-          }}>
-            ⚡ RAPID QUIZ
-          </button>
-        </div>
-
-        {missedCount > 0 && (
-          <button onClick={() => startSection("missed")} style={{
-            width: "100%", padding: "12px", borderRadius: 10, border: "1px solid rgba(239,68,68,0.3)",
-            background: "rgba(239,68,68,0.1)", color: "#FCA5A5", fontWeight: 600,
-            fontSize: 13, cursor: "pointer", marginBottom: 16
-          }}>
-            🎯 DRILL MISSED ONLY ({missedCount} cards)
-          </button>
-        )}
-
-        {/* Sections */}
-        <p style={{ fontSize: 12, color: "#64748B", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600, marginBottom: 8 }}>Study by Section</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {Object.entries(SECTIONS).map(([key, sec]) => {
-            const sectionKnown = sec.questions.filter((_, i) => known[`${key}-${i}`]).length;
-            const sectionTotal = sec.questions.length;
-            const sectionPct = sectionTotal > 0 ? Math.round((sectionKnown / sectionTotal) * 100) : 0;
-            return (
-              <button key={key} onClick={() => startSection(key)} style={{
-                display: "flex", alignItems: "center", gap: 10,
-                padding: "12px 14px", borderRadius: 10,
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.06)",
-                color: "#E2E8F0", cursor: "pointer", textAlign: "left"
-              }}>
-                <span style={{ fontSize: 20, width: 28 }}>{sec.emoji}</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600 }}>{sec.title}</div>
-                  <div style={{ fontSize: 11, color: "#64748B" }}>{sectionTotal} questions</div>
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: sectionPct === 100 ? "#4ADE80" : "#94A3B8" }}>
-                    {sectionPct === 100 ? "✅" : `${sectionKnown}/${sectionTotal}`}
+          {/* Sections */}
+          <p style={{ fontSize: 12, color: "#64748B", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 600, marginBottom: 8 }}>Study by Section</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {Object.entries(SECTIONS).map(([key, sec]) => {
+              const sectionKnown = sec.questions.filter((_, i) => known[`${key}-${i}`]).length;
+              const sectionTotal = sec.questions.length;
+              const sectionPct = sectionTotal > 0 ? Math.round((sectionKnown / sectionTotal) * 100) : 0;
+              return (
+                <button key={key} onClick={() => startSection(key)} style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "12px 14px", borderRadius: 10,
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  color: "#E2E8F0", cursor: "pointer", textAlign: "left"
+                }}>
+                  <span style={{ fontSize: 20, width: 28 }}>{sec.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600 }}>{sec.title}</div>
+                    <div style={{ fontSize: 11, color: "#64748B" }}>{sectionTotal} questions</div>
                   </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: sectionPct === 100 ? "#4ADE80" : "#94A3B8" }}>
+                      {sectionPct === 100 ? "✅" : `${sectionKnown}/${sectionTotal}`}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
-        <div style={{ textAlign: "center", padding: "20px 0 10px", color: "#475569", fontSize: 11 }}>
-          New York is waiting. Let's get it. 🗽
-        </div>
+          <div style={{ textAlign: "center", padding: "20px 0 10px", color: "#475569", fontSize: 11 }}>
+            New York is waiting. Let's get it. 🗽
+          </div>
         </>)}
       </div>
     );
